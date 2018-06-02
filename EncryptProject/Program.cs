@@ -105,7 +105,7 @@ namespace EncryptProject
                     numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros));
+                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros), numeros.Min(), numeros.Max());
 
                 return newUsers;
             }
@@ -145,7 +145,7 @@ namespace EncryptProject
                     numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros));
+                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros), numeros.Min(), numeros.Max());
 
                 return newUsers;
             }
@@ -185,7 +185,7 @@ namespace EncryptProject
                     numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros));
+                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros), numeros.Min(), numeros.Max());
 
                 return newUsers;
             }
@@ -405,12 +405,15 @@ namespace EncryptProject
             }
         }
 
-        public static void printTimeConvert(double time, double desvio)
+        public static void printTimeConvert(double time, double desvio, double minTime, double maxTime)
         {
             Console.WriteLine("------------------------------------------------------");
-            Console.WriteLine("  Tempo para conversão(" + baseAtual + ")");
-            Console.WriteLine("  Média (30 execuções): " + time + ")");
-            Console.WriteLine("  Desvio Padrão (30 execuções): " + desvio + ")");
+            Console.WriteLine("  Tempo para conversão(" + baseAtual + ") ( Utilizando 30 execuções)");
+            Console.WriteLine("                                                       ");
+            Console.WriteLine("  Menor Tempo: " + minTime + " Milissegundos");
+            Console.WriteLine("  Maior Tempo: " + maxTime + " Milissegundos");
+            Console.WriteLine("  Tempo Médio: " + time + " Milissegundos");
+            Console.WriteLine("  Desvio Padrão : " + desvio + " Milissegundos");
             Console.WriteLine("------------------------------------------------------");
         }
 
