@@ -82,17 +82,32 @@ namespace EncryptProject
                 MD5 md5Hash = MD5.Create();
                 byte[] temp_password;
 
-                foreach (User usr in users)
-                {
-                    if(salted)
-                        temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.user + usr.password));
-                    else
-                        temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password));
+                var newUsers = users;
+                List<double> numeros = new List<double>();
+                Stopwatch watch;
 
-                    usr.password = BitConverter.ToString(temp_password).Replace("-", string.Empty);
+                for (int i = 0; i < 30; i++)
+                {
+                    newUsers = users;
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+
+                    foreach (User usr in newUsers)
+                    {
+                        if (salted)
+                            temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.user + usr.password));
+                        else
+                            temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password));
+
+                        usr.password = BitConverter.ToString(temp_password).Replace("-", string.Empty);
+                    }
+                    watch.Stop();
+
+                    numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                return users;
+                Interact.printTimeConvert(Calcule.Media(numeros, 30), Calcule.Desviation(numeros, 30));
+
+                return newUsers;
             }
             catch (Exception e)
             {
@@ -104,20 +119,35 @@ namespace EncryptProject
         {
             try
             {
-                SHA1 sha1hash = SHA1.Create();
+                SHA1 md5Hash = SHA1.Create();
                 byte[] temp_password;
 
-                foreach (User usr in users)
-                {
-                    if(salted)
-                        temp_password = sha1hash.ComputeHash(Encoding.UTF8.GetBytes(usr.user + usr.password));
-                    else
-                        temp_password = sha1hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password));
+                var newUsers = users;
+                List<double> numeros = new List<double>();
+                Stopwatch watch;
 
-                    usr.password = BitConverter.ToString(temp_password).Replace("-", string.Empty);
+                for (int i = 0; i < 30; i++)
+                {
+                    newUsers = users;
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+
+                    foreach (User usr in newUsers)
+                    {
+                        if (salted)
+                            temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.user + usr.password));
+                        else
+                            temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password));
+
+                        usr.password = BitConverter.ToString(temp_password).Replace("-", string.Empty);
+                    }
+                    watch.Stop();
+
+                    numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                return users;
+                Interact.printTimeConvert(Calcule.Media(numeros, 30), Calcule.Desviation(numeros, 30));
+
+                return newUsers;
             }
             catch (Exception e)
             {
@@ -129,20 +159,35 @@ namespace EncryptProject
         {
             try
             {
-                SHA256 sha256hash = SHA256.Create();
+                SHA256 md5Hash = SHA256.Create();
                 byte[] temp_password;
 
-                foreach (User usr in users)
-                {
-                    if(salted)
-                        temp_password = sha256hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password + usr.user));
-                    else
-                        temp_password = sha256hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password));
+                var newUsers = users;
+                List<double> numeros = new List<double>();
+                Stopwatch watch;
 
-                    usr.password = BitConverter.ToString(temp_password).Replace("-", string.Empty);
+                for (int i = 0; i < 30; i++)
+                {
+                    newUsers = users;
+                    watch = System.Diagnostics.Stopwatch.StartNew();
+
+                    foreach (User usr in newUsers)
+                    {
+                        if (salted)
+                            temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.user + usr.password));
+                        else
+                            temp_password = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(usr.password));
+
+                        usr.password = BitConverter.ToString(temp_password).Replace("-", string.Empty);
+                    }
+                    watch.Stop();
+
+                    numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                return users;
+                Interact.printTimeConvert(Calcule.Media(numeros, 30), Calcule.Desviation(numeros, 30));
+
+                return newUsers;
             }
             catch (Exception e)
             {
@@ -242,6 +287,42 @@ namespace EncryptProject
         }
     }
 
+    //Classe para calculos de variancia e media
+    public static class Calcule
+    {
+        public static double Media(List<double> numeros, int n)
+        {
+            double retorno = 0;
+
+            foreach(double num in numeros)
+            {
+                retorno += num;
+            }
+
+            return retorno / (double)n;
+        }
+        
+        public static double Variance(List<double> numeros, int n)
+        {
+            double sum = 0;
+            double med = Media(numeros, n);
+
+            foreach(double num in numeros)
+            {
+                sum += (num - med) * (num - med);
+            }
+
+            return sum / (double)(n - 1);
+        }
+
+        public static double Desviation(List<double> numeros, int n)
+        {
+            double variance = Variance(numeros, n);
+
+            return Math.Sqrt(variance);
+        }
+    }
+
     //Interação com o usuario
     public static class Interact
     {
@@ -322,10 +403,12 @@ namespace EncryptProject
             }
         }
 
-        public static void printTimeConvert(double time)
+        public static void printTimeConvert(double time, double desvio)
         {
             Console.WriteLine("------------------------------------------------------");
-            Console.WriteLine("  Tempo para conversão(" + baseAtual + "): " + time + " Milisegundos.             ");
+            Console.WriteLine("  Tempo para conversão(" + baseAtual + ")");
+            Console.WriteLine("  Média (30 execuções): " + time + ")");
+            Console.WriteLine("  Desvio Padrão (30 execuções): " + desvio + ")");
             Console.WriteLine("------------------------------------------------------");
         }
 
@@ -411,56 +494,38 @@ namespace EncryptProject
                 {
                     case "1":
                         iniciaLista();
-                        watch = System.Diagnostics.Stopwatch.StartNew();
-                        Converters.MD5_(users);
-                        watch.Stop();
                         baseAtual = "MD5";
-                        printTimeConvert(watch.Elapsed.TotalMilliseconds);
+                        Converters.MD5_(users);
                         break;
 
                     case "2":
-                        iniciaLista();
-                        watch = System.Diagnostics.Stopwatch.StartNew();
-                        Converters.SHA1_(users);
-                        watch.Stop();
+                        iniciaLista();                        
                         baseAtual = "SHA1";
-                        printTimeConvert(watch.Elapsed.TotalMilliseconds);
+                        Converters.SHA1_(users);
                         break;
 
                     case "3":
                         iniciaLista();
-                        watch = System.Diagnostics.Stopwatch.StartNew();
-                        Converters.SHA256_(users);
-                        watch.Stop();
                         baseAtual = "SHA256";
-                        printTimeConvert(watch.Elapsed.TotalMilliseconds);
+                        Converters.SHA256_(users);                        
                         break;
 
                     case "4":
                         iniciaLista();
-                        watch = System.Diagnostics.Stopwatch.StartNew();
-                        Converters.MD5_(users, true);
-                        watch.Stop();
                         baseAtual = "MD5 (Salted)";
-                        printTimeConvert(watch.Elapsed.TotalMilliseconds);
+                        Converters.MD5_(users, true);
                         break;
 
                     case "5":
                         iniciaLista();
-                        watch = System.Diagnostics.Stopwatch.StartNew();
-                        Converters.SHA1_(users, true);
-                        watch.Stop();
                         baseAtual = "SHA1 (Salted)";
-                        printTimeConvert(watch.Elapsed.TotalMilliseconds);
+                        Converters.SHA1_(users, true);                        
                         break;
 
                     case "6":
                         iniciaLista();
-                        watch = System.Diagnostics.Stopwatch.StartNew();
-                        Converters.SHA256_(users, true);
-                        watch.Stop();
                         baseAtual = "SHA256 (Salted)";
-                        printTimeConvert(watch.Elapsed.TotalMilliseconds);
+                        Converters.SHA256_(users, true);
                         break;
 
                     case "7":
