@@ -325,7 +325,7 @@ namespace EncryptProject
         public static void printTimeConvert(double time)
         {
             Console.WriteLine("------------------------------------------------------");
-            Console.WriteLine("  Tempo para conversão: " + time + " Milisegundos.             ");
+            Console.WriteLine("  Tempo para conversão(" + baseAtual + "): " + time + " Milisegundos.             ");
             Console.WriteLine("------------------------------------------------------");
         }
 
