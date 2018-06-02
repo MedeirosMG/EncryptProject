@@ -105,7 +105,7 @@ namespace EncryptProject
                     numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                Interact.printTimeConvert(Calcule.Media(numeros, 30), Calcule.Desviation(numeros, 30));
+                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros));
 
                 return newUsers;
             }
@@ -145,7 +145,7 @@ namespace EncryptProject
                     numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                Interact.printTimeConvert(Calcule.Media(numeros, 30), Calcule.Desviation(numeros, 30));
+                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros));
 
                 return newUsers;
             }
@@ -185,7 +185,7 @@ namespace EncryptProject
                     numeros.Add(watch.Elapsed.TotalMilliseconds);
                 }
 
-                Interact.printTimeConvert(Calcule.Media(numeros, 30), Calcule.Desviation(numeros, 30));
+                Interact.printTimeConvert(Calcule.Media(numeros), Calcule.Desviation(numeros));
 
                 return newUsers;
             }
@@ -290,22 +290,24 @@ namespace EncryptProject
     //Classe para calculos de variancia e media
     public static class Calcule
     {
-        public static double Media(List<double> numeros, int n)
+        public static double Media(List<double> numeros)
         {
             double retorno = 0;
+            double n = numeros.Count();
 
             foreach(double num in numeros)
             {
                 retorno += num;
             }
 
-            return retorno / (double)n;
+            return retorno / n;
         }
         
-        public static double Variance(List<double> numeros, int n)
+        public static double Variance(List<double> numeros)
         {
             double sum = 0;
-            double med = Media(numeros, n);
+            double n = numeros.Count();
+            double med = Media(numeros);
 
             foreach(double num in numeros)
             {
@@ -315,9 +317,9 @@ namespace EncryptProject
             return sum / (double)(n - 1);
         }
 
-        public static double Desviation(List<double> numeros, int n)
+        public static double Desviation(List<double> numeros)
         {
-            double variance = Variance(numeros, n);
+            double variance = Variance(numeros);
 
             return Math.Sqrt(variance);
         }
